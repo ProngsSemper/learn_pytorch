@@ -40,10 +40,18 @@ class Prongs(nn.Module):
 # writer = SummaryWriter("logs")
 # writer.add_graph(prongs, input)
 # writer.close()
-loss = nn.CrossEntropyLoss
+loss = nn.CrossEntropyLoss()
 prongs = Prongs()
+# 使用随机梯度下降 学习率为0.01
+optim = torch.optim.SGD(prongs.parameters(), lr=0.01)
 for data in dataloader:
     imgs, targets = data
     outputs = prongs(imgs)
     result_loss = loss(outputs, targets)
+    # 先清零
+    optim.zero_grad()
+    # 反向传播
+    result_loss.backward()
+    # 梯度下降
+    optim.step()
     # print("ok")
